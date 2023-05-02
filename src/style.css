@@ -1,0 +1,130 @@
+body{
+    margin: 0;
+    font-size:21px;
+}
+.main{
+    min-width:1000px;
+    display:flex;
+}
+
+.leftside{
+    width:20%;
+}
+
+.centerside{
+    width:calc(70% - 2*var(--value-small-percentage));
+    padding: var(--value-small-percentage);
+    opacity:1;
+    transition-delay: 0.1s;
+    transition: opacity 0.33s;
+}
+
+
+.rightside{
+    width:10%;
+}
+
+.active-list-element{
+    background-color: gray;
+    color: var(--darker-gray) !important;
+}
+
+.logo{
+    font-size: 2rem;
+    color: white;
+}
+
+.header{
+    padding-left:24px;
+    padding: var(--padding-medium);
+    background-color: navy;
+}
+
+:root{
+    --standard-radius: 7px;
+    --gray : #A9A9A9;
+    --darker-gray :  	#505050;
+    --padding-small : 7px;
+    --padding-medium: 14px;
+    --padding-big: 28px;
+    --value-small-percentage: 3%;
+    --burgundy:  	#800020;
+    --salmon: #FA8072;
+}
+.list-menu{
+    list-style: none;
+    
+}
+
+.red-btn{
+    border-color: var(--burgundy) !important;
+    background-color: var(--salmon);
+    color: var(--burgundy);
+}
+
+.list-menu li{
+    padding: var(--padding-small);
+    color: dimgray;
+    
+}
+
+.list-menu li:hover{
+    border-radius: var(--padding-small);
+    background: silver;
+}
+
+.leftside{
+    background-color: gainsboro;
+}
+
+.describing{
+    font-weight: bolder;
+    text-indent: var(--padding-medium);
+    padding: var(--padding-small);
+    border-left: var(--padding-small) solid navy;
+    margin-bottom: var(--padding-big);
+}
+
+.standard-btn{
+    padding: var(--padding-medium);
+    border: 2px solid navy;
+    border-radius: var(--standard-radius);
+}
+
+
+.standard-input{
+    padding: var(--padding-small);
+    text-indent: 3px;
+    border: 3px solid gray;
+    outline:none;
+    width:50%;
+    font-size: 1.12rem;
+
+}
+
+.standard-input:focus{
+    border-color:navy;
+}
+
+.hidden{
+    display: none;
+    opacity: 0;
+    transition: opacity 0.33s;
+}
+
+.separated-bottom-top{
+    border-bottom: 2px solid gainsboro;
+    border-top: 2px solid gainsboro;
+   
+}
+
+.controls-bar{
+    display:flex;
+    padding: 14px;
+}
+
+.row{
+    padding: 14px 0 14px 0;
+    display:flex;
+    gap:14px;
+}
