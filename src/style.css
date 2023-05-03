@@ -1,6 +1,7 @@
 body{
     margin: 0;
     font-size:21px;
+    font-family: 'Roboto', sans-serif;
 }
 .main{
     min-width:1000px;
@@ -12,7 +13,7 @@ body{
 }
 
 .centerside{
-    width:calc(70% - 2*var(--value-small-percentage));
+    width:calc(75% - 2*var(--value-small-percentage));
     padding: var(--value-small-percentage);
     opacity:1;
     transition-delay: 0.1s;
@@ -20,8 +21,12 @@ body{
 }
 
 
+.jumbo{
+    width:100%;
+}
+
 .rightside{
-    width:10%;
+    width:5%;
 }
 
 .active-list-element{
@@ -37,7 +42,7 @@ body{
 .header{
     padding-left:24px;
     padding: var(--padding-medium);
-    background-color: navy;
+    background-color: var(--main-color);
 }
 
 :root{
@@ -50,6 +55,7 @@ body{
     --value-small-percentage: 3%;
     --burgundy:  	#800020;
     --salmon: #FA8072;
+    --main-color: navy;
 }
 .list-menu{
     list-style: none;
@@ -81,13 +87,13 @@ body{
     font-weight: bolder;
     text-indent: var(--padding-medium);
     padding: var(--padding-small);
-    border-left: var(--padding-small) solid navy;
+    border-left: var(--padding-small) solid var(--main-color);
     margin-bottom: var(--padding-big);
 }
 
 .standard-btn{
     padding: var(--padding-medium);
-    border: 2px solid navy;
+    border: 2px solid var(--main-color);
     border-radius: var(--standard-radius);
 }
 
@@ -103,7 +109,7 @@ body{
 }
 
 .standard-input:focus{
-    border-color:navy;
+    border-color:var(--main-color);
 }
 
 .hidden{
@@ -118,13 +124,88 @@ body{
    
 }
 
+.separated-top{
+    border-top: 2px solid gainsboro;
+}
+
+.separated-bottom{
+    
+    border-bottom: 2px solid gainsboro;
+}
+
 .controls-bar{
     display:flex;
     padding: 14px;
 }
-
 .row{
     padding: 14px 0 14px 0;
     display:flex;
+
+}
+
+.row-columns{
+    flex-direction: column;
+    gap: var(--padding-small);
+}
+.subrow{
+    
+    display:flex;
     gap:14px;
 }
+
+.adnotation{
+    font-size: 0.85rem;
+    color: dimgray;
+}
+
+i{
+    color: var(--main-color);
+    margin-right: 7px;
+}
+
+.box{
+    padding: var(--padding-medium);
+    border: 2px solid gray;
+    display:inline-block;
+
+}
+
+
+.colorpick{
+    display:flex;
+    gap: 14px;
+}
+
+.colorpick-view{
+    width:32px;
+    height:32px;
+    border:1px solid gray;
+}
+fieldset legend{
+    font-size: 0.92rem;
+}
+
+.section div{
+    margin: 7px 0 7px 0;
+}
+.section{
+    padding: 28px 0 28px 0;
+}
+
+.subsection{
+    margin-bottom: 14px !important;
+}
+
+ul > div{
+    padding: 14px !important;
+}
+
+.list-view{
+    padding:0;
+    margin:0;
+}
+
+.marked{
+    background-color: gainsboro;
+}
+
