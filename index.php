@@ -14,7 +14,7 @@
     <title>Simple Datebase</title>
     <link rel="stylesheet" href="src/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900italic,900' rel='stylesheet' type='text/css'>
     <style>
 
     </style>
@@ -55,6 +55,33 @@
             </div>
             <div v-bind:class="{ hidden : tabCode!=2  }" class="centerside-tab">
                 <div class="describing">Zmień ustawienia serwera i domyślne ustawienia klienta systemu</div>
+                <div class="section separated-bottom">
+                    <h3><i class="fa fa-gear"></i>Ogólne</h3>
+                    <div class="subsection">
+                        <label><i class="fa fa-globe small-indent" aria-hidden="true"></i>
+                            Język:
+                            <select>
+                                <option value="pl_PL">polski</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div><label><input type="checkbox">Automatycznie zapisuj postępy w edycji (w danej karcie) w pamięci przeglądarki</label></div>
+                    <div><label><input type="checkbox">Pozwól mi działać również offline</label></div>
+                    <div><label><input type="checkbox">Nie wyświetlaj niepotrzebnie informacji oznaczonych jako systemowe</label></div>
+                </div>
+                <div class="section separated-bottom">
+                    <h3><i class="fa fa-window-maximize"></i>Interfejs</h3>
+                    <div><label><input type="checkbox">Włącz tryb ciemny</label></div>
+                    <fieldset class="box small-box">
+                        <legend>Wybierz główny kolor interfejsu</legend>
+                        <div class="colorpick">
+                            <div class="colorpick-view" v-bind:style="{ 'background-color' : colorPickerColor}"></div>
+                            <div class="colorpick-input">
+                                <input type="text"  v-model="colorPickerColor">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div v-bind:class="{ hidden : tabCode!=3  }" class="centerside-tab">
                 <div class="describing">Utwórz nowy rejestr(tabelę) w bazie danych organizacji</div>
@@ -65,19 +92,49 @@
                     
                     <div class="controls-bar separated-bottom-top">
                         <button @click="addColumn()">+Add </button>
+                        <span :class="{hidden : !showSelectionInfo}" class="adnotation" v-text="'Wybrano '+selectedElements"></span>
                     </div>
                     <ul class="list-view" id="new_columns">
-                        <div class="row" v-for="data,index in columnsTemp">
-                                <input type="text" class="standard-input">
-                                <select>
+                        <div class="row row-columns" :class="{marked : selection[index]}" v-for="data,index in columnsTemp" @click="markOrUnmark(index)">
+                           <div class="subrow">
+                            
+                                <input v-model="columnsTemp[index].name" @keyup="generateDatabaseName(index)" type="text" class="standard-input">
+                              
+                         
+                               <select>
                                     <option>Tekst</option>
                                     <option>Liczba</option>
                                 </select>
                                 <div class="controls">
-                                    <button class="standard-btn red-btn fa fa-plus" @click="addProperty(count)"></button>
+                                    <button class="standard-btn red-btn fa fa-plus" @click="showProperties(index)"></button>
                                     <button class="standard-btn red-btn fa fa-trash-o" @click="deleteColumn(index)"></button>
                                     <button class="standard-btn blue-btn fa fa-clone" @click="cloneColumn(index)"></button>
                                 </div>
+                            </div>
+                            
+                            <div class="subrow">
+                                <span class="adnotation" v-text="'Nazwa systemowa: '+columnsTemp[index].databaseName"></span>
+                            </div>
+                            <div class="subrow">
+                                <div class="row row-columns">
+
+                                <div class="subrow">
+
+                                
+                               <span>Lista własności </span>
+                               <button class="standard-btn blue-btn fa fa-clone" @click="newProperty(index)"></button>
+                            </div>
+                               <ul class="list-view" id="">
+                                <div class="row row-columns" v-for="data,indexx in columnsTemp[index].propeties">
+                                    <select>
+                                        <option>Maska wartości</option>
+                                        <option>Maksymalna wartość</option>
+                                    </select>
+                                    <input v-model="columnsTemp[index].propeties[indexx]" @keyup="generateDatabaseName(index)" type="text" class="standard-input"> 
+                                </div>
+                               </ul>
+                            </div>
+                            </div>
                         </div>
                     </ul>
                 </div>
@@ -98,14 +155,41 @@ var app = new Vue({
       message: 'Hello Vue!',
       tabCode : 0,
       columnsTemp : [],
-      
-      columnNumber : 0
+      colorPickerColor : "navy",
+      columnNumber : 0,
+      selection : [false],
+      showSelectionInfo : false,
+      selectedElements : 0
     },
     methods : {
         mainMenu: function(x){
             this.tabCode = x;
+            window.localStorage["currentLocation"]=this.tabCode;
+        },
+        isMarked(index){
+            console.log("e");
+            return this.selection[index];
         },
         addProperty(){
+
+        },
+        markOrUnmark(index){
+            
+            if(this.selection[index]==undefined || this.selection[index]==false){
+                this.selection[index]=true;
+                this.selectedElements++;
+            }else if(this.selection[index]==true){
+                this.selection[index]=false;
+                this.selectedElements--;
+            }
+            this.updateView();
+            if(this.selection.includes(true)){
+                this.showSelectionInfo = true;
+            }else{
+                this.showSelectionInfo = false;
+            }
+        },
+        newProperty(index){
 
         },
         func(data){
@@ -114,31 +198,50 @@ var app = new Vue({
         updateView (){
             this.$forceUpdate();
         },
-        cloneColumn(){
-
+        cloneColumn(index){
+            let x = this.columnsTemp[index];
+            this.columnsTemp.splice(index, 0,{"id": index+1, "name": x.name, "databaseName" : x.databaseName, propeties: x.propeties} );
+           
+            this.updateView();
+        },
+        changeLocation(location){
+            window.localStorage['currentlocation']=location;
+        },
+        replacePolishLetters(string){
+            let polish = ["ą", "ę", "ó", "ń", "ś", "ł", "ź", "ż", "ć"];
+            let ascii = ["a", "e", "o", "n", "s", "l", "z", "z","c"];
+            polish.forEach((value,index)=>{
+                string = string.replaceAll(value, ascii[index]);
+            });
+            return string;
         },
         addColumn(){
             
             this.columnNumber++;
-            this.columnsTemp.push({id : this.columnNumber});
+            this.columnsTemp.push({"id":this.columnsTemp.length, "name" : "", "databaseName": "", propeties : []});
             
             
         },
-        deleteColumn(x){
-            console.log(x);
+        generateDatabaseName(index){
+            this.columnsTemp[index].databaseName = this.replacePolishLetters(this.columnsTemp[index].name).replaceAll(" ", "_");
+
+        },
+        deleteColumn(index){
+            
             
           //this.columnsTemp.splice(x, 1);
          let x,y;
-         if(x==this.columnNumber){
+         if(index==this.columnsTemp.length-1){
              this.columnsTemp.pop();
-         }else if(x==0){
-            this.columnsTemp.slice(1);
          }else{
             x = this.columnsTemp;
          y = x;
          x = y.slice(0,index);
-         y.slice(-1*(y.length-index));
+         y = y.slice(index+1);
+         console.log(y);
          
+         console.log(x);
+         this.columnsTemp = x.concat(y);
          }
          
            
@@ -146,6 +249,30 @@ var app = new Vue({
         }
     },
     mounted() {
+        addEventListener("beforeunload", (event) => {
+            switch(Number(app.tabCode)){
+                case 3:
+                    window.localStorage['temp']=JSON.stringify(app.columnsTemp);
+                    break;
+            }
+        });
+        if(window.localStorage["currentLocation"]!=undefined){
+            this.tabCode=window.localStorage["currentLocation"];
+        }else{
+            window.localStorage["currentLocation"]=0;
+        }
+        if(window.localStorage["temp"]!=undefined){
+            switch(Number(window.localStorage["currentLocation"])){
+                case 3:
+                    this.columnsTemp = JSON.parse(window.localStorage["temp"]);
+                    break;
+            }
+        }
+        
+
+        
+    },
+    watch:{
         
     },
    
